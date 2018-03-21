@@ -44,6 +44,7 @@ func getChoice(choice map[int][]interface{}) (int, []interface{}) {
     return -1, nil
 }
 
+// ruleSeq returns Rule.Choice.Sequence
 func ruleSeq(item interface{}, rulename string) (int, []interface{}) {
     rule, ok := item.(map[string]map[int][]interface{})
     if ok {
@@ -55,9 +56,7 @@ func ruleSeq(item interface{}, rulename string) (int, []interface{}) {
 func buildSequence(s0 []interface{}) *sysl.Sequence {
     terms := make([]*sysl.Term, 0)
     if s0 != nil {
-        s := s0[0].([]interface{})
-
-        for _, term := range s {
+        for _, term := range s0[0].([]interface{}) {
             var t *sysl.Term
             _, t0 := ruleSeq(term, "term")
             atomType, atom := ruleSeq(t0[0], "atom")
