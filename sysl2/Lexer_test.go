@@ -23,7 +23,7 @@ func TestLexer(t *testing.T) {
     lex := makeLexer(content, regexes)
     for i, expected := range tokens {
         tok := lex.nextToken()
-        if tok != expected {
+        if expected != tok {
             t.Errorf("wrong token @ %d: expected %+v but got %+v", i, expected, tok)
         }
     }
