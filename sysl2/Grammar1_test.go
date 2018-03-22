@@ -264,16 +264,52 @@ func TestEBNF2(t *testing.T) {
 }
 
 func TestBuildEBNFGrammar(t *testing.T) {
+    // Both grammars are equivalent
+    grammars := []string{
+        `s : "d" | "c" s ; `,
+        `s : "c"* "d" ; `,
+    }
+    text := "ccd"
+    tokens := [][]int{
+        {1, 1, 0, -1},
+        {0, 0, 1, -1},
+    }
+    choiceBranch := []int{1, 0}
+
+    for i := range grammars {
+        g := parseEBNF(grammars[i], "obj", "s")
+
+        result, ast := testParser(g, 2, tokens[i], text, true, t)
+        if !result {
+            t.Errorf("unable to parse text=(%s)", text)
+        }
+        choiceActual, s := ruleSeq(ast[0], "s")
+        if choiceBranch[i] != choiceActual && len(s) != 2 {
+            t.Errorf("parse returned incorrect ast for text=(%s)", text)
+        }
+    }
+}
+
+func TestBuildEBNFGrammar2(t *testing.T) {
     text := `
-        s : "d" | "c" s ;
+        s : "b" "a" "b" | "b" a;
+        a : "d" | "c" a;
         `
     g := parseEBNF(text, "obj", "s")
+    if len(g.Rules) != 2 {
+        t.Errorf("incorrect number of rules")
+    }
+    text = "bab"
+    tokens := []int{2, 3, 2, -1}
 
-    text = "ccd"
-    tokens := []int{1, 1, 0, -1}
+    result, ast := testParser(g, 4, tokens, text, true, t)
 
-    result, _ := testParser(g, 2, tokens, text, true, t)
     if !result {
         t.Errorf("unable to parse text=(%s)", text)
+    }
+
+    choiceActual, s := ruleSeq(ast[0], "s")
+    if 0 != choiceActual && len(s) != 3 {
+        t.Errorf("parse returned incorrect ast for text=(%s)", text)
     }
 }
