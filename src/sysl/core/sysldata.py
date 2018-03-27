@@ -22,8 +22,10 @@ def _make_varmgr(module, appname, write):
         app = module.apps[name]
         write('class "{}" as {} << (D,orchid) >> {{', name, var)
         typespec = module.apps.get(appname).types.get(name)
-        assert typespec.WhichOneof('type') == 'tuple'
-        fields = sorted(typespec.tuple.attr_defs.iteritems(),
+        # assert typespec.WhichOneof('type') == 'tuple'
+        attrs = typespec.tuple if typespec.WhichOneof('type') == 'tuple' else typespec.relation
+
+        fields = sorted(attrs.attr_defs.iteritems(),
                         key=_attr_sort_key)
         for (fieldname, fieldtype) in fields:
             which = fieldtype.WhichOneof('type')
@@ -60,20 +62,24 @@ def _make_varmgr(module, appname, write):
 def _generate_view(module, appname, types):
     """Output integration view"""
     write = writer.Writer('plantuml')
-
+    print "gen view"
     var_name = _make_varmgr(module, appname, write)
 
     with write.uml():
+        print len(types)
         for (appname, name, typespec) in types:
             var_name(name)
-
+            print "name:", appname, name
             link_sets = collections.defaultdict(
                 lambda: collections.defaultdict(list))
 
+            attrs = typespec.tuple if typespec.WhichOneof('type') == 'tuple' else typespec.relation
+
             fields = sorted(
-                typespec.tuple.attr_defs.iteritems(), key=_attr_sort_key)
+                attrs.attr_defs.iteritems(), key=_attr_sort_key)
             for (fieldname, fieldtype) in fields:
                 cardinality = u' '
+                print fieldname, fieldtype.WhichOneof('type')
                 while fieldtype.WhichOneof('type') == 'list':
                     fieldtype = fieldtype.list.type
                     cardinality = u'0..*'
@@ -132,7 +138,8 @@ def dataviews(module, args):
             if not module.apps.get(appname):
                 continue
             for (name, typespec) in module.apps.get(appname).types.iteritems():
-                if typespec.WhichOneof('type') == 'tuple':
+                print "dataviews: ", name, typespec.WhichOneof('type')
+                if typespec.WhichOneof('type') == 'relation' or typespec.WhichOneof('type') == 'tuple':
                     types.append((appname, name, typespec))
 
         args.output = out_fmt(
