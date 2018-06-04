@@ -68,6 +68,13 @@ func TestIfElse(t *testing.T) {
 	}
 }
 
+func TestArgs(t *testing.T) {
+	filename := "tests/args.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
 func TestSimpleEPWithSpaces(t *testing.T) {
 	filename := "tests/with_spaces.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
@@ -112,6 +119,13 @@ func TestEventing(t *testing.T) {
 
 func TestCollector(t *testing.T) {
 	filename := "tests/collector.sysl"
+	if loadAndCompare(Parse(filename, ""), filename, "") == false {
+		t.Error("failed")
+	}
+}
+
+func TestPubSubCollector(t *testing.T) {
+	filename := "tests/pubsub_collector.sysl"
 	if loadAndCompare(Parse(filename, ""), filename, "") == false {
 		t.Error("failed")
 	}

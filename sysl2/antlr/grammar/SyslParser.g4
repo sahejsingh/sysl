@@ -5,7 +5,7 @@ options { tokenVocab=SyslLexer; }
 modifier        : TILDE Name (PLUS Name)*;
 size_spec       : OPEN_PAREN DIGITS ( DOT DIGITS)? CLOSE_PAREN;
 modifier_list   : modifier (COMMA modifier)*;
-sq_open: SQ_OPEN | SQ_OPEN_2;
+sq_open: SQ_OPEN;
 modifiers       : sq_open modifier_list SQ_CLOSE;
 name_str        : Name|TEXT_LINE;
 reference       : app_name (DOT name_str)+;
@@ -40,7 +40,7 @@ table   :   SYSL_COMMENT*
         ;
 
 package_name   : name_str;
-sub_package    : NAME_SEP package_name;
+sub_package    : (NAME_SEP) package_name;
 app_name       : package_name sub_package*;
 
 name_with_attribs       :   app_name  QSTRING? attribs_or_modifiers?;
@@ -66,10 +66,15 @@ endpoint_name   : name_str (FORWARD_SLASH name_str)*;
 
 ret_stmt        : RETURN TEXT;
 
+call_arg_type: LESS_COLON (name_str | NativeDataTypes);
+call_arg : QSTRING | (name_str call_arg_type?);
+
+http_call_part : name_str | (CURLY_OPEN name_str CURLY_CLOSE);
+rest_call: HTTP_VERBS (FORWARD_SLASH | http_call_part)+  query_param?;
+
+call_args: OPEN_PAREN call_arg (COMMA call_arg)* CLOSE_PAREN;
+target_endpoint : name_str | rest_call ;
 target          : app_name;
-target_endpoint : TEXT_VALUE;
-call_arg : (Q_ARG | TEXT_VALUE)+ | (TEXT_VALUE LESS_COLON_2 TEXT_VALUE);
-call_args: OPEN_PAREN_ARG call_arg (COMMA_ARG call_arg)* CLOSE_PAREN_ARG;
 call_stmt       : (DOT_ARROW | target ARROW_LEFT) target_endpoint call_args?;
 
 if_stmt                 : IF PREDICATE_VALUE COLON INDENT statements* DEDENT;
@@ -111,7 +116,6 @@ statements: ( if_else
                 | text_stmt
                 | annotation
             )
-            params?
             attribs_or_modifiers?
             ;
 
@@ -138,11 +142,18 @@ rest_endpoint: http_path attribs_or_modifiers? COLON
 
 collector_query_var: name_str EQ (NativeDataTypes | name_str);
 collector_query_param: QN collector_query_var (AMP collector_query_var)*;
-collector_call_stmt:  app_name (ARROW_LEFT TEXT_VALUE)?;
+collector_call_stmt:  target ARROW_LEFT target_endpoint;
+
 collector_http_stmt_part: name_str | CURLY_OPEN name_str CURLY_CLOSE ;
 collector_http_stmt_suffix: (FORWARD_SLASH collector_http_stmt_part)+ collector_query_param?;
 collector_http_stmt: HTTP_VERBS collector_http_stmt_suffix;
-collector_stmts: (collector_call_stmt | collector_http_stmt) attribs_or_modifiers;
+
+publisher: app_name;
+subscriber: app_name;
+collector_pubsub_call: subscriber ARROW_LEFT publisher ARROW_RIGHT name_str;
+
+collector_action_stmt: name_str;
+collector_stmts: (collector_action_stmt | collector_call_stmt | collector_http_stmt | collector_pubsub_call) attribs_or_modifiers;
 
 collector:  COLLECTOR COLON (WHATEVER | (INDENT collector_stmts+ DEDENT));
 

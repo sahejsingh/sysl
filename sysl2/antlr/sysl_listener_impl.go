@@ -1174,6 +1174,7 @@ func (s *TreeShapeListener) ExitTarget(ctx *parser.TargetContext) {
 		s.app_name[i] = strings.TrimSpace(s.app_name[i])
 	}
 	s.lastStatement().GetCall().Target.Part = s.app_name
+	s.app_name = make([]string, 0)
 }
 
 // EnterTarget_endpoint is called when production target_endpoint is entered.
@@ -1846,40 +1847,21 @@ func (s *TreeShapeListener) ExitCollector_query_param(ctx *parser.Collector_quer
 
 // EnterCollector_call_stmt is called when production collector_call_stmt is entered.
 func (s *TreeShapeListener) EnterCollector_call_stmt(ctx *parser.Collector_call_stmtContext) {
-	text := ctx.App_name().GetText()
 
-	if ctx.ARROW_LEFT() == nil {
-		s.addToCurrentScope(&sysl.Statement{
-			Stmt: &sysl.Statement_Action{
-				Action: &sysl.Action{
-					Action: text,
-				},
+	appName := &sysl.AppName{}
+	s.app_name = make([]string, 0)
+	s.addToCurrentScope(&sysl.Statement{
+		Stmt: &sysl.Statement_Call{
+			Call: &sysl.Call{
+				Target:   appName,
+				Endpoint: strings.TrimSpace(ctx.Target_endpoint().GetText()),
 			},
-		})
-	} else {
-		appName := &sysl.AppName{}
-		s.app_name = make([]string, 0)
-		s.addToCurrentScope(&sysl.Statement{
-			Stmt: &sysl.Statement_Call{
-				Call: &sysl.Call{
-					Target:   appName,
-					Endpoint: strings.TrimSpace(ctx.TEXT_VALUE().GetText()),
-				},
-			},
-		})
-	}
+		},
+	})
 }
 
 // ExitCollector_call_stmt is called when production collector_call_stmt is exited.
 func (s *TreeShapeListener) ExitCollector_call_stmt(ctx *parser.Collector_call_stmtContext) {
-	if ctx.ARROW_LEFT() != nil {
-		for i := range s.app_name {
-			s.app_name[i] = strings.TrimSpace(s.app_name[i])
-		}
-
-		s.lastStatement().GetCall().Target.Part = s.app_name
-		s.app_name = make([]string, 0)
-	}
 }
 
 // EnterCollector_http_stmt_part is called when production collector_http_stmt_part is entered.
@@ -1910,6 +1892,60 @@ func (s *TreeShapeListener) ExitCollector_http_stmt(ctx *parser.Collector_http_s
 func (s *TreeShapeListener) EnterCollector_stmts(ctx *parser.Collector_stmtsContext) {
 
 }
+
+// EnterPublisher is called when production publisher is entered.
+func (s *TreeShapeListener) EnterPublisher(ctx *parser.PublisherContext) {}
+
+// ExitPublisher is called when production publisher is exited.
+func (s *TreeShapeListener) ExitPublisher(ctx *parser.PublisherContext) {
+
+}
+
+// EnterSubscriber is called when production subscriber is entered.
+func (s *TreeShapeListener) EnterSubscriber(ctx *parser.SubscriberContext) {}
+
+// ExitSubscriber is called when production subscriber is exited.
+func (s *TreeShapeListener) ExitSubscriber(ctx *parser.SubscriberContext) {
+	for i := range s.app_name {
+		s.app_name[i] = strings.TrimSpace(s.app_name[i])
+	}
+
+	s.lastStatement().GetCall().Target.Part = s.app_name
+	s.app_name = make([]string, 0)
+}
+
+// EnterCollector_pubsub_call is called when production collector_pubsub_call is entered.
+func (s *TreeShapeListener) EnterCollector_pubsub_call(ctx *parser.Collector_pubsub_callContext) {
+	appName := &sysl.AppName{}
+	s.app_name = make([]string, 0)
+	publisher := ctx.Publisher().GetText() + ctx.ARROW_RIGHT().GetText()
+	s.addToCurrentScope(&sysl.Statement{
+		Stmt: &sysl.Statement_Call{
+			Call: &sysl.Call{
+				Target:   appName,
+				Endpoint: strings.TrimSpace(publisher + ctx.Name_str().GetText()),
+			},
+		},
+	})
+}
+
+// ExitCollector_pubsub_call is called when production collector_pubsub_call is exited.
+func (s *TreeShapeListener) ExitCollector_pubsub_call(ctx *parser.Collector_pubsub_callContext) {}
+
+// EnterCollector_action_stmt is called when production collector_action_stmt is entered.
+func (s *TreeShapeListener) EnterCollector_action_stmt(ctx *parser.Collector_action_stmtContext) {
+	text := ctx.Name_str().GetText()
+	s.addToCurrentScope(&sysl.Statement{
+		Stmt: &sysl.Statement_Action{
+			Action: &sysl.Action{
+				Action: text,
+			},
+		},
+	})
+}
+
+// ExitCollector_action_stmt is called when production collector_action_stmt is exited.
+func (s *TreeShapeListener) ExitCollector_action_stmt(ctx *parser.Collector_action_stmtContext) {}
 
 // ExitCollector_stmts is called when production collector_stmts is exited.
 func (s *TreeShapeListener) ExitCollector_stmts(ctx *parser.Collector_stmtsContext) {

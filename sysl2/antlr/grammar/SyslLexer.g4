@@ -74,19 +74,19 @@ FOR                 : (F O R) [ \t]*            -> pushMode(PREDICATE);
 UNTIL               : (U N T I L) [ \t]*        -> pushMode(PREDICATE);
 ELSE                : (E L S E) [ \t]*            -> pushMode(PREDICATE);
 LOOP                : (L O O P) [ \t]*            -> pushMode(PREDICATE);
-ALT                 : (A L T) [ \t]*            -> pushMode(PREDICATE);
 WHILE                : (W H I L E) [ \t]*            -> pushMode(PREDICATE);
+ALT                 : (A L T) [ \t]*            -> pushMode(PREDICATE);
 //GROUP               : ('Group' | 'group') -> pushMode(FREE_TEXT_NAME);
 WHATEVER            : '...';
 DOTDOT              : '..';
 SET_OF              : S E T [ \t]* O F;
 ONE_OF              : O N E [ \t]* O F      ;//-> pushMode(FREE_TEXT_NAME);
 MIXIN               : '-' '|' '>';
-DISTANCE            : '<->';
-DOT_ARROW           : '.' [ \t]+ '<-' -> pushMode(ARGS); // for " '. <-' name" syntax, change mode to all  ". <- GET /rest/api/calls"
+DISTANCE            : '<->' [ \t]+;
+DOT_ARROW           : '.' [ \t]+ '<-' ; // for " '. <-' name" syntax, change mode to all  ". <- GET /rest/api/calls"
 NAME_SEP            : [ \t]* '::' [ \t]*;
-LESS_COLON          : '<:';
-ARROW_LEFT          : '<-'  -> pushMode(ARGS); // Added for: 'server <- GET /http/path' calls
+LESS_COLON          : [ \t]* '<:' [ \t]*;
+ARROW_LEFT          : '<-' [ \t]+  ; // Added for: 'server <- GET /http/path' calls
 ARROW_RIGHT         : [ \t]* '->' [ \t]* ;
 COLLECTOR           : '.. * <- *';
 PLUS                : '+';
@@ -94,6 +94,7 @@ TILDE               : '~';
 COMMA               : ',';
 EQ                  : '=';
 DOLLAR              : '$';
+
 FORWARD_SLASH       : '/'
                     { gotHttpVerb = true; }
                     ;
@@ -194,27 +195,29 @@ WS              : [ \t]+
 mode PREDICATE;
 PREDICATE_VALUE      : (~[\r\n:])* -> popMode;
 
-mode ARGS;
-SKIP_WS_ARG         : [ ]   -> skip;
-LESS_COLON_2          : '<:';
-SQ_OPEN_2             : '['   { in_sq_brackets++;} -> popMode;
+// mode ARGS;
+// ARROW_RIGHT_2         : [ \t]* '->' [ \t]* -> popMode;
+// NAME_SEP_2            : [ \t]* '::' [ \t]* -> popMode;
+// LESS_COLON_2          : '<:';
+// SQ_OPEN_2             : '['   { in_sq_brackets++;} -> popMode;
+// SKIP_WS_ARG         : [ ]   -> skip;
 
-Q_ARG: (
-            (DBL_QT WITHIN_DBL_QTS DBL_QT)
-            |
-            (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
-        );
+// Q_ARG: (
+//             (DBL_QT WITHIN_DBL_QTS DBL_QT)
+//             |
+//             (SINGLE_QT WITHIN_SNGL_QTS SINGLE_QT)
+//         );
 
-TEXT_VALUE      : (~[,'"()\r\n:[\]<])+;
-OPEN_PAREN_ARG  : '(';
-CLOSE_PAREN_ARG : ')'   -> popMode;
-// COLON_ARG       : ':'   -> popMode;
-COMMA_ARG       : ',' [ \t]*;
+// TEXT_VALUE      : (~[-,'"()\r\n:[\]<>])+;
+// OPEN_PAREN_ARG  : '(';
+// CLOSE_PAREN_ARG : ')'   -> popMode;
+// // COLON_ARG       : ':'   -> popMode;
+// COMMA_ARG       : ',' [ \t]*;
 
-NEWLINE_2           : '\r'? '\n'
-                    {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
-                    -> channel(HIDDEN), popMode
-                    ;
+// NEWLINE_2           : '\r'? '\n'
+//                     {gotNewLine = true; gotHttpVerb=false; spaces=0; linenum++;}
+//                     -> channel(HIDDEN), popMode
+//                     ;
 
 mode NOT_NEWLINE;
 TEXT            : (~[\r\n])+        -> popMode ;

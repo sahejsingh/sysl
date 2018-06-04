@@ -303,17 +303,11 @@ func (s *BaseSyslParserListener) EnterRet_stmt(ctx *Ret_stmtContext) {}
 // ExitRet_stmt is called when production ret_stmt is exited.
 func (s *BaseSyslParserListener) ExitRet_stmt(ctx *Ret_stmtContext) {}
 
-// EnterTarget is called when production target is entered.
-func (s *BaseSyslParserListener) EnterTarget(ctx *TargetContext) {}
+// EnterCall_arg_type is called when production call_arg_type is entered.
+func (s *BaseSyslParserListener) EnterCall_arg_type(ctx *Call_arg_typeContext) {}
 
-// ExitTarget is called when production target is exited.
-func (s *BaseSyslParserListener) ExitTarget(ctx *TargetContext) {}
-
-// EnterTarget_endpoint is called when production target_endpoint is entered.
-func (s *BaseSyslParserListener) EnterTarget_endpoint(ctx *Target_endpointContext) {}
-
-// ExitTarget_endpoint is called when production target_endpoint is exited.
-func (s *BaseSyslParserListener) ExitTarget_endpoint(ctx *Target_endpointContext) {}
+// ExitCall_arg_type is called when production call_arg_type is exited.
+func (s *BaseSyslParserListener) ExitCall_arg_type(ctx *Call_arg_typeContext) {}
 
 // EnterCall_arg is called when production call_arg is entered.
 func (s *BaseSyslParserListener) EnterCall_arg(ctx *Call_argContext) {}
@@ -321,11 +315,35 @@ func (s *BaseSyslParserListener) EnterCall_arg(ctx *Call_argContext) {}
 // ExitCall_arg is called when production call_arg is exited.
 func (s *BaseSyslParserListener) ExitCall_arg(ctx *Call_argContext) {}
 
+// EnterHttp_call_part is called when production http_call_part is entered.
+func (s *BaseSyslParserListener) EnterHttp_call_part(ctx *Http_call_partContext) {}
+
+// ExitHttp_call_part is called when production http_call_part is exited.
+func (s *BaseSyslParserListener) ExitHttp_call_part(ctx *Http_call_partContext) {}
+
+// EnterRest_call is called when production rest_call is entered.
+func (s *BaseSyslParserListener) EnterRest_call(ctx *Rest_callContext) {}
+
+// ExitRest_call is called when production rest_call is exited.
+func (s *BaseSyslParserListener) ExitRest_call(ctx *Rest_callContext) {}
+
 // EnterCall_args is called when production call_args is entered.
 func (s *BaseSyslParserListener) EnterCall_args(ctx *Call_argsContext) {}
 
 // ExitCall_args is called when production call_args is exited.
 func (s *BaseSyslParserListener) ExitCall_args(ctx *Call_argsContext) {}
+
+// EnterTarget_endpoint is called when production target_endpoint is entered.
+func (s *BaseSyslParserListener) EnterTarget_endpoint(ctx *Target_endpointContext) {}
+
+// ExitTarget_endpoint is called when production target_endpoint is exited.
+func (s *BaseSyslParserListener) ExitTarget_endpoint(ctx *Target_endpointContext) {}
+
+// EnterTarget is called when production target is entered.
+func (s *BaseSyslParserListener) EnterTarget(ctx *TargetContext) {}
+
+// ExitTarget is called when production target is exited.
+func (s *BaseSyslParserListener) ExitTarget(ctx *TargetContext) {}
 
 // EnterCall_stmt is called when production call_stmt is entered.
 func (s *BaseSyslParserListener) EnterCall_stmt(ctx *Call_stmtContext) {}
@@ -478,6 +496,30 @@ func (s *BaseSyslParserListener) EnterCollector_http_stmt(ctx *Collector_http_st
 
 // ExitCollector_http_stmt is called when production collector_http_stmt is exited.
 func (s *BaseSyslParserListener) ExitCollector_http_stmt(ctx *Collector_http_stmtContext) {}
+
+// EnterPublisher is called when production publisher is entered.
+func (s *BaseSyslParserListener) EnterPublisher(ctx *PublisherContext) {}
+
+// ExitPublisher is called when production publisher is exited.
+func (s *BaseSyslParserListener) ExitPublisher(ctx *PublisherContext) {}
+
+// EnterSubscriber is called when production subscriber is entered.
+func (s *BaseSyslParserListener) EnterSubscriber(ctx *SubscriberContext) {}
+
+// ExitSubscriber is called when production subscriber is exited.
+func (s *BaseSyslParserListener) ExitSubscriber(ctx *SubscriberContext) {}
+
+// EnterCollector_pubsub_call is called when production collector_pubsub_call is entered.
+func (s *BaseSyslParserListener) EnterCollector_pubsub_call(ctx *Collector_pubsub_callContext) {}
+
+// ExitCollector_pubsub_call is called when production collector_pubsub_call is exited.
+func (s *BaseSyslParserListener) ExitCollector_pubsub_call(ctx *Collector_pubsub_callContext) {}
+
+// EnterCollector_action_stmt is called when production collector_action_stmt is entered.
+func (s *BaseSyslParserListener) EnterCollector_action_stmt(ctx *Collector_action_stmtContext) {}
+
+// ExitCollector_action_stmt is called when production collector_action_stmt is exited.
+func (s *BaseSyslParserListener) ExitCollector_action_stmt(ctx *Collector_action_stmtContext) {}
 
 // EnterCollector_stmts is called when production collector_stmts is entered.
 func (s *BaseSyslParserListener) EnterCollector_stmts(ctx *Collector_stmtsContext) {}

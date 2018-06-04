@@ -149,17 +149,26 @@ type SyslParserListener interface {
 	// EnterRet_stmt is called when entering the ret_stmt production.
 	EnterRet_stmt(c *Ret_stmtContext)
 
-	// EnterTarget is called when entering the target production.
-	EnterTarget(c *TargetContext)
-
-	// EnterTarget_endpoint is called when entering the target_endpoint production.
-	EnterTarget_endpoint(c *Target_endpointContext)
+	// EnterCall_arg_type is called when entering the call_arg_type production.
+	EnterCall_arg_type(c *Call_arg_typeContext)
 
 	// EnterCall_arg is called when entering the call_arg production.
 	EnterCall_arg(c *Call_argContext)
 
+	// EnterHttp_call_part is called when entering the http_call_part production.
+	EnterHttp_call_part(c *Http_call_partContext)
+
+	// EnterRest_call is called when entering the rest_call production.
+	EnterRest_call(c *Rest_callContext)
+
 	// EnterCall_args is called when entering the call_args production.
 	EnterCall_args(c *Call_argsContext)
+
+	// EnterTarget_endpoint is called when entering the target_endpoint production.
+	EnterTarget_endpoint(c *Target_endpointContext)
+
+	// EnterTarget is called when entering the target production.
+	EnterTarget(c *TargetContext)
 
 	// EnterCall_stmt is called when entering the call_stmt production.
 	EnterCall_stmt(c *Call_stmtContext)
@@ -235,6 +244,18 @@ type SyslParserListener interface {
 
 	// EnterCollector_http_stmt is called when entering the collector_http_stmt production.
 	EnterCollector_http_stmt(c *Collector_http_stmtContext)
+
+	// EnterPublisher is called when entering the publisher production.
+	EnterPublisher(c *PublisherContext)
+
+	// EnterSubscriber is called when entering the subscriber production.
+	EnterSubscriber(c *SubscriberContext)
+
+	// EnterCollector_pubsub_call is called when entering the collector_pubsub_call production.
+	EnterCollector_pubsub_call(c *Collector_pubsub_callContext)
+
+	// EnterCollector_action_stmt is called when entering the collector_action_stmt production.
+	EnterCollector_action_stmt(c *Collector_action_stmtContext)
 
 	// EnterCollector_stmts is called when entering the collector_stmts production.
 	EnterCollector_stmts(c *Collector_stmtsContext)
@@ -407,17 +428,26 @@ type SyslParserListener interface {
 	// ExitRet_stmt is called when exiting the ret_stmt production.
 	ExitRet_stmt(c *Ret_stmtContext)
 
-	// ExitTarget is called when exiting the target production.
-	ExitTarget(c *TargetContext)
-
-	// ExitTarget_endpoint is called when exiting the target_endpoint production.
-	ExitTarget_endpoint(c *Target_endpointContext)
+	// ExitCall_arg_type is called when exiting the call_arg_type production.
+	ExitCall_arg_type(c *Call_arg_typeContext)
 
 	// ExitCall_arg is called when exiting the call_arg production.
 	ExitCall_arg(c *Call_argContext)
 
+	// ExitHttp_call_part is called when exiting the http_call_part production.
+	ExitHttp_call_part(c *Http_call_partContext)
+
+	// ExitRest_call is called when exiting the rest_call production.
+	ExitRest_call(c *Rest_callContext)
+
 	// ExitCall_args is called when exiting the call_args production.
 	ExitCall_args(c *Call_argsContext)
+
+	// ExitTarget_endpoint is called when exiting the target_endpoint production.
+	ExitTarget_endpoint(c *Target_endpointContext)
+
+	// ExitTarget is called when exiting the target production.
+	ExitTarget(c *TargetContext)
 
 	// ExitCall_stmt is called when exiting the call_stmt production.
 	ExitCall_stmt(c *Call_stmtContext)
@@ -493,6 +523,18 @@ type SyslParserListener interface {
 
 	// ExitCollector_http_stmt is called when exiting the collector_http_stmt production.
 	ExitCollector_http_stmt(c *Collector_http_stmtContext)
+
+	// ExitPublisher is called when exiting the publisher production.
+	ExitPublisher(c *PublisherContext)
+
+	// ExitSubscriber is called when exiting the subscriber production.
+	ExitSubscriber(c *SubscriberContext)
+
+	// ExitCollector_pubsub_call is called when exiting the collector_pubsub_call production.
+	ExitCollector_pubsub_call(c *Collector_pubsub_callContext)
+
+	// ExitCollector_action_stmt is called when exiting the collector_action_stmt production.
+	ExitCollector_action_stmt(c *Collector_action_stmtContext)
 
 	// ExitCollector_stmts is called when exiting the collector_stmts production.
 	ExitCollector_stmts(c *Collector_stmtsContext)
