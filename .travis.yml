@@ -4,18 +4,21 @@ services:
   - docker
 python:
 - '2.7'
-go_import_path: anz-bank/sysl
 matrix:
   include:
   - os: linux
     dist: trusty
+    language: go
+    go_import_path: anz-bank/sysl
     after_success:
     - pip install codecov -e .
     - coverage run --source=src/sysl -m py.test
     - codecov
+    - go env
   - os: osx
     osx_image: xcode8.3
-    language: generic
+    language: go
+    go_import_path: anz-bank/sysl
     before_install:
     - brew update
     - brew list python >/dev/null 2>&1 || brew install python
